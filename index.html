@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading and Displaying 3D Models in A-Frame</title>
+
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+
+  <script src="https://unpkg.com/aframe-axis-helper-component/dist/aframe-axis-helper-component.min.js"></script>
+
+  <script>
+    window.addEventListener('wheel', e => e.preventDefault(), { passive: false });
+
+    AFRAME.registerComponent('log-position', {
+      init: function () {
+        this.lastTime = 0;
+      },
+      tick: function (time) {
+        if (time - this.lastTime > 500) {
+          const pos = this.el.object3D.position;
+          console.log(`Player = X:${pos.x.toFixed(2)} Y:${pos.y.toFixed(2)} Z:${pos.z.toFixed(2)}`);
+          this.lastTime = time;
+        }
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <a-scene axis-helper>
+
+    <a-assets>
+      <a-asset-item id="castle-scene" src="assets/castle-scene.glb"></a-asset-item>
+
+      <a-asset-item id="catapult-obj" src="assets/catapult.obj"></a-asset-item>
+      <a-asset-item id="catapult-mtl" src="assets/catapult.mtl"></a-asset-item>
+
+      <img id="sky" src="assets/clear-sunny-sky.jpg">
+    </a-assets>
+
+
+    <a-sky src="#sky"></a-sky>
+
+  
+    <a-entity gltf-model="#castle-scene"
+              position="0 0 0"
+              scale="500 500 500">
+    </a-entity>
+
+    <a-entity id="catapult"
+              obj-model="obj: #catapult-obj; mtl: #catapult-mtl"
+              position="-10 0 50"
+              rotation="0 200 0"
+              scale="1 1 1">
+    </a-entity>
+
+
+    <a-entity id="player"
+              camera
+              look-controls
+              wasd-controls="acceleration: 50"
+              position="0 5 10"
+              log-position>
+    </a-entity>
+
+
+  </a-scene>
+</body>
+</html>
